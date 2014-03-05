@@ -7,13 +7,34 @@
 	<%= link_to "Sign up", new_user_registration_path %> or <%= link_to "Sign in", new_user_session_path %>
 	<% end %>
 </div>
- User list
+<div>
+	<% if flash[:notice]%>
+	<%= flash[:notice] %>
+	<%end%>
+	<strong>Friend Requests</strong><br/>
+	<%  @u=Friendship.all %>
+	<% @u.each do |f1|%>
+	<% if f1.status=="Waiting" && f1.friend_id == current_user.id%>
+	<%= f1.user.email%>
+	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.friend_id %>
+	<%= link_to "Ignore", :controller=> "friendships", :action=> "reject_friend", :id => f1.friend_id%>
+
+	<%#= link_to '[Accept]', user_friend_path(:user_id => current_user, :id => u), :method => :put, :confirm => 'Accept friend request! Are you sure?' %> |
+	<%#= link_to '[Reject]', user_friend_path(:user_id => current_user, :id => u), :method => :delete, :confirm => 'Reject friend request! Are you sure?' %>
+
+	<%end%>
+	<%end%>
+</div>
+
+User list
 <div id="users">
 	<%for user in @users %>
 	<div class="user">
 		<p>
+		<% if user != current_user %>
 			<strong><%= user.email%></strong>
 			<%= link_to "Add Friend", friendships_path(:friend_id => user), :method => :post %>
+			<%end%>
 		</p>
 	</div>
 	<%end%>

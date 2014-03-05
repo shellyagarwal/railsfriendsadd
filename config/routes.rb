@@ -11,6 +11,10 @@ Project::Application.routes.draw do
   root 'welcome#index'
   resources :friendships
   match 'show', to: 'welcome#show', via: [:get, :post]
+  match 'add_friend', to: 'friendships#add_friend', via: [:get, :post]
+  match ':controller/:action/:id', via: [:get, :post]
+  # match 'reject_friend', to: 'friendships#reject_friend', via: [:get, :post]
+  
   # resources :users
 
 

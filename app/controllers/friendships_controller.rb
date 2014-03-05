@@ -1,20 +1,37 @@
 class FriendshipsController < ApplicationController
 	def create
-  @friendship = current_user.friendships.build(:friend_id => params[:friend_id])
+  @friendship = current_user.friendships.build(:friend_id => params[:friend_id],:status=>"Waiting")
+
   if @friendship.save
-    # flash[:notice] = "Added friend!"
-    # redirect_to root_url
-    # redirect_to action: 'show', controller: "welcome", status: :added_friend
+    
+     redirect_to action: 'show', controller: "welcome"
   else
     flash[:error] = "Unable to add friend!"
-  end
     redirect_to root_path
-end
 
+
+  end
+end
+def add_friend
+  @friendship = Friendship.find_by_friend_id(params[:id])
+  # binding.pry
+  @friendship.update_attribute(:status ,"Accepted")
+
+    flash[:notice] = "Accepted friend!"
+    redirect_to root_path
+
+
+end
+def reject_friend
+    @friendship = Friendship.find_by_friend_id(params[:id])
+    flash[:notice] = "Rejected friend!"
+  @friendship.destroy
+    redirect_to root_path  
+end
 def destroy
   @friendship = current_user.friendships.find(params[:id])
   @friendship.destroy
-  flash[:notice] = "Removed friendship!"
   redirect_to root_path
 end
+
 end
