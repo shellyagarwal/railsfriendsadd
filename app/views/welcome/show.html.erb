@@ -1,12 +1,10 @@
 <h2>Friends</h2>
 <ul>
   <% for friendship in @user.friendships %>
-  <% if friendship.status=="Accepted"%>
     <li>
       <%=h friendship.friend.email %>
       (<%= link_to "remove", friendship, :method => :delete %>)
     </li>
-  <% end %>
   <% end %>
 </ul>
 

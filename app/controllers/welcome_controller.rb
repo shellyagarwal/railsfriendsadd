@@ -1,7 +1,10 @@
 class WelcomeController < ApplicationController
   	before_filter :authenticate_user!
   def index
+    @notcurrent=User.where.not(:id => current_user.id)
   	@users=User.all
+    @friendships1=current_user.friendships.map {|a| a.friend_id}
+    @friends=Friendship.all
   end
   def show
   	@user=current_user
@@ -9,15 +12,4 @@ class WelcomeController < ApplicationController
   def new
    	@user=User.new
    end
-   
-# def create
-#     @user = User.new(params[:user])
-#     if @user.save
-#       session[:user_id] = @user.id
-#       flash[:notice] = "Thank you for signing up! You are now logged in."
-#       redirect_to root_url
-#     else
-#       render :action => 'new'
-#     end
-#   end
 end
