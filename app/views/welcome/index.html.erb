@@ -18,25 +18,29 @@
 	<%= f1.user.email%>
 	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.friend_id %>
 	<%= link_to "Ignore", :controller=> "friendships", :action=> "reject_friend", :id => f1.friend_id%>
-
-	<%#= link_to '[Accept]', user_friend_path(:user_id => current_user, :id => u), :method => :put, :confirm => 'Accept friend request! Are you sure?' %> |
-	<%#= link_to '[Reject]', user_friend_path(:user_id => current_user, :id => u), :method => :delete, :confirm => 'Reject friend request! Are you sure?' %>
-
 	<%end%>
 	<%end%>
 </div>
 
 User list
 <div id="users">
+<% @fr =Friendship.find_by_status("Waiting")%>
 	<%for user in @users %>
 	<div class="user">
 		<p>
 		<% if user != current_user %>
 			<strong><%= user.email%></strong>
+			
+			<% if @fr.present? && @fr.friend_id==user.id%>
+			<% binding.pry%>
+			<%= link_to "Request Sent" %>
+			<%else%>
 			<%= link_to "Add Friend", friendships_path(:friend_id => user), :method => :post %>
 			<%end%>
+	<%end%>
 		</p>
 	</div>
 	<%end%>
+
 </div>
 
