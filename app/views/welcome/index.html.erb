@@ -1,5 +1,8 @@
 <div class="container">
 <div class="row" id="user_nav">
+	<% if flash[:notice]%>
+	<%= flash[:notice] %>
+	<%end%>
 	<% if user_signed_in? %>
 	<div class="col-xs-12 sign">
 	Signed in as <%= current_user.email %>
@@ -10,32 +13,38 @@
 	<% end %>
 </div>
 <div>
-	<% if flash[:notice]%>
-	<%= flash[:notice] %>
-	<%end%>
+	
 	<strong>Friend Requests</strong><br/>
-	<%  @u=Friendship.all %>
-	<% @u.each do |f1|%>
-	<% if f1.status==0 && f1.friend_id == current_user.id%>
+	<% @a=Friendship.where(:friend_id => current_user, :status => 0) %>
+
+	<%#  @u=Friendship.all %>
+	<% @a.each do |f1|%>
 	<%= f1.user.email%>
-	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.friend_id %>
-	<%= link_to "Reject", :controller=> "friendships", :action=> "reject_friend", :id => f1.friend_id%>
-	<%= link_to "Block", :controller=> "friendships", :action=> "block_friend", :id => f1.friend_id %>
-	<%end%>
+	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.user_id %>
+	<%= link_to "Reject", :controller=> "friendships", :action=> "reject_friend", :id => f1.user_id%>
+	<%= link_to "Block", :controller=> "friendships", :action=> "block_friend", :id => f1.user_id %>
+
 	<%end%>
 </div>
 <br/><br/>
 <h2>All Users:-</h2>
 
-<div class="user">
+<div class="row user-list">
+<div class="col-xs-12 user">
 	<% @notcurrent.each do |user| %>
+	<% @a=user.friendships %>
+	<% @s=@a.where(:friend_id => current_user) %>
+	<% @b=@s.include?(:status => 2) %>
+	<% if !user.friendships.where(:friend_id =>current_user).present? %>
 	<strong><%= user.email%></strong>
-	<% if @friendships1.include?(user.id) || (@friendships1.include?(user.id) && @friends.status=2)%>
+	<% if @friendships1.include?(user.id) || @b.present?%>
 	<%= link_to "Request Sent"%><br/>
-	<%else%>
+	<% else  %>
 	<%= link_to "Add Friend", friendships_path(:friend_id => user.id), :method => :post %><br/>
 	<%end%>
 	<%end%>
+	<% end %>
+	</div>
 
 </div>
 

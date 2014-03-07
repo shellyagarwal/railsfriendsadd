@@ -4,7 +4,6 @@ class WelcomeController < ApplicationController
     @notcurrent=User.where.not(:id => current_user.id)
   	@users=User.all
     @friendships1=current_user.friendships.map {|a| a.friend_id}
-    @friends=Friendship.all
   end
   def show
   	@user=current_user

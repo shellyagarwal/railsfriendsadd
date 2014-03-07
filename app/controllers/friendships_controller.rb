@@ -11,7 +11,7 @@ class FriendshipsController < ApplicationController
   end
 end
 def add_friend
-  @friendship = Friendship.find_by_friend_id(params[:id])
+  @friendship = Friendship.where(:user_id=>params[:id],:friend_id=>current_user.id).first
   @friendship.update_attribute(:status ,1)
 
     flash[:notice] = "Accepted friend!"
@@ -20,7 +20,8 @@ def add_friend
 
 end
 def reject_friend
-    @friendship = Friendship.find_by_friend_id(params[:id])
+  @friendship = Friendship.where(:user_id=>params[:id],:friend_id=>current_user.id).first
+  
     flash[:notice] = "Rejected friend!"
   @friendship.destroy
     redirect_to root_path  
@@ -28,7 +29,7 @@ end
 
 def block_friend
 
-    @friendship = Friendship.find_by_friend_id(params[:id])
+  @friendship = Friendship.where(:user_id=>params[:id],:friend_id=>current_user.id).first
     @friendship.update_attribute(:status ,2)
     flash[:notice] = "Blocked friend!"
   redirect_to root_path
