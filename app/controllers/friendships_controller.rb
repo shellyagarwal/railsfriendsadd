@@ -35,8 +35,8 @@ def block_friend
   redirect_to root_path
 end
 def destroy
-  @friendship = current_user.friendships.find(params[:id])
-  @friendship.destroy
+  @friendship = Friendship.find(params[:id])
+   @friendship.destroy
   redirect_to root_path
 end
 

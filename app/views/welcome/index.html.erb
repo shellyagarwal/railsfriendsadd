@@ -1,8 +1,6 @@
 <div class="container">
 <div class="row" id="user_nav">
-	<% if flash[:notice]%>
-	<%= flash[:notice] %>
-	<%end%>
+	
 	<% if user_signed_in? %>
 	<div class="col-xs-12 sign">
 	Signed in as <%= current_user.email %>
@@ -11,13 +9,18 @@
 	<%= link_to "Sign up", new_user_registration_path %> or <%= link_to "Sign in", new_user_session_path %>
 	</div>
 	<% end %>
+	<% if flash[:notice]%>
+	<%= flash[:notice] %>
+	<%end%>      	
 </div>
 <div>
+<div>
+	<%= link_to "View Friends", :controller => "welcome" , :action =>"show" %>
+</div>
+<br/>
 	
 	<strong>Friend Requests</strong><br/>
-	<% @a=Friendship.where(:friend_id => current_user, :status => 0) %>
-
-	<%#  @u=Friendship.all %>
+	<% @a=Friendship.where(:friend_id => current_user.id, :status => 0) %>
 	<% @a.each do |f1|%>
 	<%= f1.user.email%>
 	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.user_id %>
