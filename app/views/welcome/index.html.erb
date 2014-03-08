@@ -15,7 +15,16 @@
 </div>
 <div>
 <div>
-	<%= link_to "View Friends", :controller => "welcome" , :action =>"show" %>
+	<%= link_to "View Friends", :controller => "welcome" , :action =>"show" %><br/>
+	<h1>New Circle</h1>
+<%= form_for :circle, :url => { :controller => "welcome", :action => "create_circle" }  do |f|  %>
+	<%= f.hidden_field :user_id, :value =>current_user.id%>
+	
+    <%= f.text_field  :circle_name %>
+
+    <%= f.submit "Create Circle", class: "btn btn-primary" %>
+ <%end%>
+
 </div>
 <br/>
 	

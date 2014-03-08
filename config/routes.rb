@@ -13,6 +13,9 @@ Project::Application.routes.draw do
   match 'show', to: 'welcome#show', via: [:get, :post]
   match 'add_friend', to: 'friendships#add_friend', via: [:get, :post]
   match ':controller/:action/:id', via: [:get, :post]
+  match 'create_circle', to: 'welcome#create_circle', via: [:get, :post]
+  match 'add_to_circle', to: 'welcome#add_to_circle', via: [:get, :post]
+
   # match 'reject_friend', to: 'friendships#reject_friend', via: [:get, :post]
   
   # resources :users

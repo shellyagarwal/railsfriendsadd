@@ -15,11 +15,20 @@
 	<% for friendship in @a1%>
 	<%= friendship.friend.email%> :: 
 	<%= link_to "Unfriend", friendship, :method =>:delete %>
-	<%end%>
+	<% @circles.each do |c|%>
+	<%= c.circle_name%>
+	<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :friend_id => friendship.friend_id, :name =>c.circle_name) %><br/>
+<%end%>
+		<%end%>
 	<% @b1=Friendship.where(:friend_id => current_user.id, :status=>1)%>
 	<% for friendship in @b1%>
 	<%= friendship.friend.email%> :: 
 	<%= link_to "Unfriend", friendship, :method =>:delete %>
+	<% @circles.each do |c|%>
+	<%= c.circle_name%>
+	<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :friend_id => friendship.friend_id, :name =>c.circle_name)%><br/>
+
+	<%end%>
 	
 	<%end%>
 

@@ -1,0 +1,9 @@
+<h1>New Circle</h1>
+<%= form_for @circle, :url => { :action => "create_circle" }  do |f|  %>
+	<%= f.hidden_field :user_id, :value =>current_user.id%>
+    <%= f.text_field  :circle_name %>
+
+    <%= f.submit "Create Circle", class: "btn btn-primary" %>
+ <%end%>
+
+<%= link_to 'Back', root_path %>

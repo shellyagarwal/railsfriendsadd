@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  circle_id: 
+  user_id: 
+  circle_name: MyString
+
+two:
+  circle_id: 
+  user_id: 
+  circle_name: MyString
