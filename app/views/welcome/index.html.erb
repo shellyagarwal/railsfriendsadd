@@ -1,64 +1,81 @@
 <div class="container">
-<div class="row" id="user_nav">
-	
-	<% if user_signed_in? %>
-	<div class="col-xs-12 sign">
-	Signed in as <%= current_user.email %>
-	<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-	<% else %>
-	<%= link_to "Sign up", new_user_registration_path %> or <%= link_to "Sign in", new_user_session_path %>
+	<div class="row" id="user_nav">
+
+		<% if flash[:notice]%>
+		<%= flash[:notice] %>
+		<%end%>      	
 	</div>
-	<% end %>
-	<% if flash[:notice]%>
-	<%= flash[:notice] %>
-	<%end%>      	
-</div>
-<div>
-<div>
-	<%= link_to "View Friends", :controller => "welcome" , :action =>"show" %><br/>
-	<h1>New Circle</h1>
-<%= form_for :circle, :url => { :controller => "welcome", :action => "create_circle" }  do |f|  %>
-	<%= f.hidden_field :user_id, :value =>current_user.id%>
-	
-    <%= f.text_field  :circle_name %>
+	<div>
+		<div>
+			<strong><%= link_to "View Friends", :controller => "welcome" , :action =>"show" %></strong>
+		</div>
+		<h3>Friend Requests</h3><br/>
+		<% @a=Friendship.where(:friend_id => current_user.id, :status => 0) %>
+		<% @a.each do |f1|%>
+		<%= f1.user.email%>
+		<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.user_id %>
+		<%= link_to "Reject", :controller=> "friendships", :action=> "reject_friend", :id => f1.user_id%>
+		<%= link_to "Block", :controller=> "friendships", :action=> "block_friend", :id => f1.user_id %>
 
-    <%= f.submit "Create Circle", class: "btn btn-primary" %>
- <%end%>
+		<%end%>
+	</div>
+	<br/><br/>
+	<h3>Other Users</h3>
 
-</div>
-<br/>
-	
-	<strong>Friend Requests</strong><br/>
-	<% @a=Friendship.where(:friend_id => current_user.id, :status => 0) %>
-	<% @a.each do |f1|%>
-	<%= f1.user.email%>
-	<%= link_to "Add", :controller=> "friendships", :action=> "add_friend", :id => f1.user_id %>
-	<%= link_to "Reject", :controller=> "friendships", :action=> "reject_friend", :id => f1.user_id%>
-	<%= link_to "Block", :controller=> "friendships", :action=> "block_friend", :id => f1.user_id %>
+	<div class="row user-list">
+		<div class="col-xs-12 user">
+				<% @notcurrent.each do |u|%>
+					<% if Friendship.where(['(user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)', current_user.id, u.id, u.id, current_user.id]).count <= 0 %>
+					<%= u.email %><%= link_to "Add Friend", friendships_path(:friend_id => u.id), :method => :post %><br/>
+					<% end %>
+				<%end%>
+		   	    <% @a1=Friendship.where(:friend_id => current_user.id)%>
+				<% @a2=Friendship.where(:user_id => current_user.id) %>
+					<% @a1.each do |a|%>
+						<%= User.find(a.user_id).email%>
+						<% if a.status == 0 %>
+							<%= link_to "Request Sent"%><br/>
+						<%elsif a.status == 2 %>
+							Blocked user<br/>
+						<%elsif a.status == 1 %>
+							Accepted Request<br/>
+					
+						<%end%>
+					<%end%>
+					<% @a2.each do |a|%>
+						<%= User.find(a.friend_id).email%>
 
-	<%end%>
-</div>
-<br/><br/>
-<h2>All Users:-</h2>
-
-<div class="row user-list">
-<div class="col-xs-12 user">
-	<% @notcurrent.each do |user| %>
-	<% @a=user.friendships %>
-	<% @s=@a.where(:friend_id => current_user) %>
-	<% @b=@s.include?(:status => 2) %>
-	<% if !user.friendships.where(:friend_id =>current_user).present? %>
-	<strong><%= user.email%></strong>
-	<% if @friendships1.include?(user.id) || @b.present?%>
-	<%= link_to "Request Sent"%><br/>
-	<% else  %>
-	<%= link_to "Add Friend", friendships_path(:friend_id => user.id), :method => :post %><br/>
-	<%end%>
-	<%end%>
-	<% end %>
+						<% if a.status == 0 %>
+							<%= link_to "Request Sent"%><br/>
+						<%elsif a.status == 2 %>
+							Blocked user<br/>
+						<%elsif a.status == 1 %>
+							Accepted Request<br/>
+						<%end%>
+					<%end%>
+					
+		</div>
 	</div>
 
-</div>
+	<div class="row circle-list">
+		<div class="col-xs-12">
+		<h3>Your existing Circles</h3>
+			<% @circles.each do |c| %>
+			<%=c.circle_name%>
+			<%= link_to(" : Friends in this Circle", :controller => "welcome" , :action =>"circle_friend",:id => c.id,:name => c.circle_name)%><br/>
+			<%= link_to("Delete this Circle", :controller =>"welcome", :action => "delete_circle", :id=> c.id) %><br/>
+			<%end%>
+			
+
+			<h3>Create new Circle</h3>
+
+			<%= form_for :circle, :url => { :controller => "welcome", :action => "create_circle", :method => "POST" }  do |f|  %>
+			<%= f.hidden_field :user_id, :value =>current_user.id%>
+			<%= f.text_field  :circle_name %>
+			<%= f.submit "Create Circle", class: "btn btn-primary" %>
+			<%end%>
+		</div>
+	</div>
 
 
 </div>

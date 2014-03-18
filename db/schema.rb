@@ -11,14 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140308112401) do
+ActiveRecord::Schema.define(version: 20140318070629) do
 
   create_table "circles", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "friendship_id"
-    t.string   "circle_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "circle_name"
+    t.integer  "user_id"
+  end
+
+  create_table "circles_users", force: true do |t|
+    t.integer "circle_id"
+    t.integer "user_id"
   end
 
   create_table "friendships", force: true do |t|

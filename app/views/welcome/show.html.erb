@@ -1,37 +1,40 @@
-
 <p><%= link_to "Back", root_path %></p>
-<br/>
-<h2>Sent Request</h2>
+<h3>Sent Request</h3><br/>
 <% @cufs=@user.friendships %>
-	<% @a= @cufs.where(:status =>0) %>
-	<% for friendship in @a %>
+<% @a= @cufs.where(:status =>0) %>
+<% for friendship in @a %>
 	<%= friendship.friend.email%> :: 
-	<%= link_to "Cancel Request", friendship, :method =>:delete %>
-	<%end%>
-
-<h2>Friends</h2>
-<% @cufs1=@user.friendships %>
-	<% @a1= @cufs1.where(:status =>1) %>
-	<% for friendship in @a1%>
-	<%= friendship.friend.email%> :: 
-	<%= link_to "Unfriend", friendship, :method =>:delete %>
-	<% @circles.each do |c|%>
-	<%= c.circle_name%>
-	<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :friend_id => friendship.friend_id, :name =>c.circle_name) %><br/>
+	<%= link_to "Cancel Request", friendship, :method =>:delete %><br/>
 <%end%>
-		<%end%>
-	<% @b1=Friendship.where(:friend_id => current_user.id, :status=>1)%>
-	<% for friendship in @b1%>
-	<%= friendship.friend.email%> :: 
-	<%= link_to "Unfriend", friendship, :method =>:delete %>
+
+<h3>Friends</h3>
+<% @cufs1=@user.friendships %>
+<% @a1= @cufs1.where(:status =>1) %>
+<% for friendship in @a1%>
+	<br/><strong><%= friendship.friend.email%> :: </strong><br/>
+	<%= link_to "Unfriend", friendship, :method =>:delete %><br/>
 	<% @circles.each do |c|%>
-	<%= c.circle_name%>
-	<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :friend_id => friendship.friend_id, :name =>c.circle_name)%><br/>
-
+		<% if c.users(friendship.friend_id).count > 0 %>
+			<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.friend_id,:id=>c.id,:method => 'delete')%><%= ": #{c.circle_name}"%><br/>
+		<%else%>
+			<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" ,:circle_id=> c.id,:friend_id => friendship.friend_id) %><%= " : #{c.circle_name}"%><br/>
+		<%end%>
 	<%end%>
-	
-	<%end%>
+<%end%>
 
+<% @b1=Friendship.where(:friend_id => current_user.id, :status=>1)%>
+<% for friendship in @b1%>
+	<% @u= User.where(:id =>friendship.user_id).first%>
+	<br/><strong><%= @u.email%> :: </strong><br/>
+	<%= link_to "Unfriend", friendship, :method =>:delete %><br/>
+	<% @circles.each do |c|%>
+		<% if c.users(friendship.user_id).count > 0  %>
+			<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.user_id, :id =>c.id, :method=>'delete')%><%= ": #{c.circle_name}"%><br/>
+		<%else%>
+			<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :circle_id=>c.id,:friend_id => friendship.user_id)%><%= " : #{c.circle_name}"%><br/>
+		<%end%>
+	<%end%>
+<%end%>
 
 
 

@@ -1,0 +1,6 @@
+<% for cirfr in @cirfrens%>
+<h3>Friends in Circle: <%= "#{cirfr.circle_name}"%></h3>
+  	<%cirfr.users.each do |s| %>
+  	<%= s.email%><br/> 
+<%end%>
+<%end%>

@@ -1,4 +1,5 @@
 Project::Application.routes.draw do
+  root 'welcome#index'
   get "welcome/index"
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
@@ -6,15 +7,18 @@ Project::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   resources :users
-
-
-  root 'welcome#index'
   resources :friendships
+  resources :circles
+  resources :circles_friends
+
+
   match 'show', to: 'welcome#show', via: [:get, :post]
   match 'add_friend', to: 'friendships#add_friend', via: [:get, :post]
   match ':controller/:action/:id', via: [:get, :post]
   match 'create_circle', to: 'welcome#create_circle', via: [:get, :post]
   match 'add_to_circle', to: 'welcome#add_to_circle', via: [:get, :post]
+  match 'delete_from_circle', to: 'welcome#delete_from_circle', via: [:get, :post]
+  match 'circle_friend', to: 'welcome#circle_friend', via: [:get, :post]
 
   # match 'reject_friend', to: 'friendships#reject_friend', via: [:get, :post]
   

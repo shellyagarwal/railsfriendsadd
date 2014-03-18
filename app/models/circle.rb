@@ -1,5 +1,4 @@
 class Circle < ActiveRecord::Base
-	has_many :users, :through => :friendships, :class_name => "User"
-	has_many :friendships
-	validates :circle_name, :uniqueness =>true
+	has_and_belongs_to_many :users
+	validates :circle_name, presence: true
 end
