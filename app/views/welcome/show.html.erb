@@ -14,11 +14,13 @@
 	<br/><strong><%= friendship.friend.email%> :: </strong><br/>
 	<%= link_to "Unfriend", friendship, :method =>:delete %><br/>
 	<% @circles.each do |c|%>
-		<% if c.users(friendship.friend_id).count > 0 %>
-			<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.friend_id,:id=>c.id,:method => 'delete')%><%= ": #{c.circle_name}"%><br/>
-		<%else%>
-			<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" ,:circle_id=> c.id,:friend_id => friendship.friend_id) %><%= " : #{c.circle_name}"%><br/>
-		<%end%>
+		<% @u = User.find(friendship.friend_id) %>
+		<% @c = Circle.find(c.id) %>
+			<% if c.users.include?(@u) %>
+				<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.friend_id,:id=>c.id,:method => 'delete')%><%= ": #{c.circle_name}"%><br/>
+			<%else%>
+				<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" ,:circle_id=> c.id,:friend_id => friendship.friend_id) %><%= " : #{c.circle_name}"%><br/>
+			<%end%>
 	<%end%>
 <%end%>
 
@@ -27,13 +29,15 @@
 	<% @u= User.where(:id =>friendship.user_id).first%>
 	<br/><strong><%= @u.email%> :: </strong><br/>
 	<%= link_to "Unfriend", friendship, :method =>:delete %><br/>
-	<% @circles.each do |c|%>
-		<% if c.users(friendship.user_id).count > 0  %>
-			<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.user_id, :id =>c.id, :method=>'delete')%><%= ": #{c.circle_name}"%><br/>
-		<%else%>
-			<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :circle_id=>c.id,:friend_id => friendship.user_id)%><%= " : #{c.circle_name}"%><br/>
+		<% @circles.each do |c|%>
+			<% @u = User.find(friendship.user_id) %>
+			<% @c = Circle.find(c.id) %>
+				<% if c.users.include?(@u) %>
+				<%= link_to("Delete from circle", :controller => "welcome" , :action =>"delete_from_circle",:friend_id => friendship.user_id, :id =>c.id, :method=>'delete')%><%= ": #{c.circle_name}"%><br/>
+			<%else%>
+				<%= link_to("Add to circle", :controller => "welcome", :action =>"add_to_circle" , :circle_id=>c.id,:friend_id => friendship.user_id)%><%= " : #{c.circle_name}"%><br/>
+			<%end%>
 		<%end%>
-	<%end%>
 <%end%>
 
 
